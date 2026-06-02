@@ -1,0 +1,45 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    environment:
+      PORT: 3000
+      WEB_ORIGIN: http://localhost
+      MYSQL_HOST: mysql
+      MYSQL_DATABASE: pcdn_manager
+      MYSQL_USER: pcdn
+      MYSQL_PASSWORD: pcdn_secret
+      REDIS_HOST: redis
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql
+      - redis
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: root_secret
+      MYSQL_DATABASE: pcdn_manager
+      MYSQL_USER: pcdn
+      MYSQL_PASSWORD: pcdn_secret
+    volumes:
+      - ./deploy/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./deploy/mysql/data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  redis:
+    image: redis:7.4-alpine
+    ports:
+      - "6379:6379"

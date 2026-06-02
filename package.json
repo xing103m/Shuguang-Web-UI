@@ -1,0 +1,15 @@
+{
+  "name": "pcdn-manager",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @pcdn/api",
+    "dev:web": "npm run dev --workspace @pcdn/web",
+    "build": "npm run build --workspace @pcdn/api && npm run build --workspace @pcdn/web",
+    "test": "npm run test --workspace @pcdn/api"
+  }
+}
